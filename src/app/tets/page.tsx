@@ -27,6 +27,12 @@ export default function TetsPage() {
   }, []);
 
   useGSAP(() => {
+    // Enable scroll normalization for mobile to prevent address bar jumps
+    ScrollTrigger.config({ ignoreMobileResize: true });
+    if (ScrollTrigger.isTouch === 1) {
+      ScrollTrigger.normalizeScroll(true);
+    }
+
     const isTouchDevice = ScrollTrigger.isTouch === 1;
     const initialLift = isTouchDevice ? 125 : 60;
     const initialScale = isTouchDevice ? 0.96 : 0.85;
@@ -45,9 +51,9 @@ export default function TetsPage() {
         trigger: pinnedRef.current,
         start: 'top top',
         end: isTouchDevice ? '+=320%' : '+=250%',
-        scrub: 1.2,
+        scrub: isTouchDevice ? 0.6 : 1.2, // Faster scrub on touch for responsiveness
         pin: pinnedRef.current,
-        pinType: isTouchDevice ? 'transform' : 'fixed',
+        pinType: 'fixed', // Lenis works better with fixed pinning
         anticipatePin: 1,
         invalidateOnRefresh: true,
         fastScrollEnd: true,
